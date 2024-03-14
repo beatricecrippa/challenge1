@@ -10,8 +10,8 @@ typedef float parameter_type;
 typedef std::function<value_type(vector)> functionR;
 typedef std::function<vector(vector)>  functionRn;
 
-#ifndef VCT_HPP
-#define VCT_HPP
+#ifndef HELPER_HPP
+#define HELPER_HPP
 
 // this class allows to choose a method for the computation of alpha k
 enum class Alpha{
