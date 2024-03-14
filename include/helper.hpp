@@ -31,7 +31,7 @@ struct input{
 
     functionR f;
     functionRn df;
-    
+
     // control on the residual
     parameter_type eps_r=1e-06;
     // control on the step length
@@ -39,7 +39,7 @@ struct input{
 
     //maximum number of iterations
     unsigned int it=1000;
-   
+
     parameter_type sigma=0.3;
     parameter_type mu=0.2;
 
@@ -53,6 +53,7 @@ struct input{
     //Gradient computation mode
     Diff d=Diff::Finite_diff;
 };
+
 //Euclidean norm
 value_type euclidean_norm(vector v){
     value_type norm=0;
@@ -65,21 +66,32 @@ value_type euclidean_norm(vector v){
     vector operator*(parameter_type scalar,vector a){
         vector result;
         for (std::size_t i = 0; i < a.size(); ++i) {
-            result[i]=scalar*a[i];
+            result.push_back(scalar*a[i]);
         }
         return result;
     }
 
     //operator -
-    vector operator-(vector lhs,vector rhs){
-    vector result;
-    if(lhs.size()!=rhs.size()){
-       std::cerr<<"\nerror: cannot compute the subtraction between two vector with different size!\n"<<std::endl;
+    vector operator-(vector lhs,vector rhs) {
+        vector result;
+        if (lhs.size() != rhs.size()) {
+            std::cerr << "\nerror: cannot compute the subtraction between two vector with different size!\n"
+                      << std::endl;
             exit(1);
+        }
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            result.push_back(lhs[i] - rhs[i]);
+        }
+        return result;
     }
-    for (std::size_t i = 0; i < lhs.size(); ++i) {
-        result[i]=lhs[i]-rhs[i];
+
+    //print vector
+    void print(vector & x){
+        std::cout<<"\nThe vector is:\n";
+        for(std::size_t i=0;i<x.size();++i){
+            std::cout<<"| "<<x[i]<<" |\n";
+        }
+
     }
-    return result;
-    }
+
 #endif

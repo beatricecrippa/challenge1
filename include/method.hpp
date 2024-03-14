@@ -10,14 +10,14 @@ class method{
   private:
 
     input _input;
-    static constexpr double h=0.0001;
+    static constexpr double h=0.00001;
  
  public:
 
     //constructor
-    method(input i): _input(i){};
+    method(input &i): _input(i){};
     //constructor by passing as parameter only f and sf
-    method(functionR _f, functionRn _df){
+    method(functionR  _f, functionRn  _df){
         _input.f=_f;
         _input.df=_df;
     };
@@ -32,20 +32,18 @@ class method{
 
         v1[i]+=h;
         v2[i]-=h;
-
-        result[i]=(_input.f(v1)-_input.f(v2)/2.*h);
+        result.push_back((_input.f(v1)-_input.f(v2))/(2.*h));
      }
     return result;
     }
 
     // grad computation
-    vector compute_grad(vector & xk){
-     if(_input.d==Diff::Finite_diff){
+     vector compute_grad(vector & xk){
+     if (_input.d==Diff::Finite_diff){
         return evaluate_gradient_diff(xk);
      }else if(_input.d==Diff::User_grad){
         return _input.df(xk);
      }
-    return evaluate_gradient_diff(xk);
     }
 
     // compute the minimizing x
@@ -57,10 +55,10 @@ class method{
      vector xold(_input.start);
      vector xnew(_input.start);
      while(!flag){
+         std::cout<<k<<"\n";
 
       // alpha computation
       ak= compute_alpha(xnew,k);
-    
       // xnew computation and gradient evaluation
       grad=compute_grad(xnew);
       xnew=xold-ak*grad;
@@ -69,20 +67,22 @@ class method{
       flag=check_convergence(xold,xnew,k,grad);
       //update
       xold=xnew;
+      ++k;
       }
+     std::cout<<"\ninterations: "<<k<<"\n"<<std::endl;
+     print(xnew);
     return xnew;
   }
 
-    
 
     //check convergence
-   bool method::check_convergence(vector & xold,vector & xnew, unsigned int k,vector & grad)const{
+   bool check_convergence(vector & xold,vector & xnew, unsigned int k,vector & grad)const{
         return k>_input.it or euclidean_norm(xold-xnew)<_input.eps_s or euclidean_norm(grad)<_input.eps_r;
     }
 
 
     //compute alpha_k - Armijo rule
-   parameter_type method::Armijo(vector & xk){
+   parameter_type Armijo(vector & xk){
       parameter_type ak=_input.a0;
       value_type gradient_norm_squared=pow(euclidean_norm((evaluate_gradient_diff(xk))),2);
       while(_input.f(xk)-_input.f(xk-ak*evaluate_gradient_diff(xk))<_input.sigma*ak*gradient_norm_squared){
