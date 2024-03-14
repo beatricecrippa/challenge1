@@ -77,7 +77,7 @@ class method{
 
     //check convergence
    bool method::check_convergence(vector & xold,vector & xnew, unsigned int k,vector & grad)const{
-        return k>_input.it or euclidean_distance(xold,xnew)<_input.eps_s or euclidean_norm(grad)<_input.eps_r;
+        return k>_input.it or euclidean_norm(xold-xnew)<_input.eps_s or euclidean_norm(grad)<_input.eps_r;
     }
 
 
