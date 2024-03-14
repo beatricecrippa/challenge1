@@ -61,20 +61,6 @@ value_type euclidean_norm(vector v){
     }
     return sqrt(norm);
 }
-
-    //Euclidean distance
-    value_type euclidean_distance(vector a,vector b){
-        value_type norm=0;
-        if(a.size()!=b.size()){
-            std::cerr<<"\nerror: cannot compute the Euclidean distance between two vector with different size!\n"<<std::endl;
-            exit(1);
-        }
-        for(size_t i=0;i<a.size();++i){
-            norm+=std::pow(a[i]-b[i],2);
-        }
-        return sqrt(norm);
-    }
-
     //operators 
     vector operator*(parameter_type scalar,vector a){
         vector result;
@@ -88,7 +74,7 @@ value_type euclidean_norm(vector v){
     vector operator-(vector lhs,vector rhs){
     vector result;
     if(lhs.size()!=rhs.size()){
-       std::cerr<<"\nerror: cannot compute the Euclidean distance between two vector with different size!\n"<<std::endl;
+       std::cerr<<"\nerror: cannot compute the subtraction between two vector with different size!\n"<<std::endl;
             exit(1);
     }
     for (std::size_t i = 0; i < lhs.size(); ++i) {
