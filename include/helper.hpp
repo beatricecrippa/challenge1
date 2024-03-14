@@ -61,7 +61,7 @@ value_type euclidean_norm(vector v){
     }
     return sqrt(norm);
 }
-    //operators 
+    //operator *
     vector operator*(parameter_type scalar,vector a){
         vector result;
         for (std::size_t i = 0; i < a.size(); ++i) {
