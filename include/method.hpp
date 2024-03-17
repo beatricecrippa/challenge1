@@ -8,15 +8,17 @@
 
 class method{
   private:
-
+    
+    // struct containing all the elements nneded by the computation
     input _input;
+    // contant used to evaluate the finite differences derivative
     static constexpr double h=0.00001;
  
  public:
 
     //constructor
     method(input &i): _input(i){};
-    //constructor by passing as parameter only f and sf
+    //constructor by passing as parameter only f and df
     method(functionR  _f, functionRn  _df){
         _input.f=_f;
         _input.df=_df;
@@ -44,33 +46,67 @@ class method{
      }else if(_input.d==Diff::User_grad){
         return _input.df(xk);
      }
+     return evaluate_gradient_diff(xk);
     }
 
-    // compute the minimizing x
+    // compute the minimizing x by gradient method
+    vector update(vector & xold, vector &xold1, parameter_type ak,vector & grad,unsigned int k){
+      if(_input.m==Method::Gradient){
+        return xold-ak*grad;
+      }else if(_input.m==Method::Heavy_Ball){
+        vector result;
+        if(k==1){
+          result=xold-ak*grad;
+        }else{
+          result=xold-ak*grad+_input.eta*(xold-xold1);
+        }
+        xold1=xold;
+        return result;
+      }else if(_input.m==Method::Nesterov){
+          vector result;
+          vector y;
+        if(k==1){
+          result=xold-ak*grad;
+        }else{
+          y=xold+_input.eta*(xold-xold1);
+          result=y-ak*compute_grad(y);
+        }
+        xold1=xold;
+        return result;
+      }
+      
+    }
+    // solving the minimization problem
     vector solve(){
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;
      vector grad;
+     vector xold1(_input.start);
      vector xold(_input.start);
      vector xnew(_input.start);
-     while(!flag){
-         std::cout<<k<<"\n";
 
-      // alpha computation
-      ak= compute_alpha(xnew,k);
+     if(_input.a==Alpha::Armijo && _input.m==Method::Heavy_Ball || _input.a==Alpha::Armijo && _input.m==Method::Nesterov){
+      flag=true;
+      std::cerr<<"Cannot use Armijo computation for the update of alpha_k and Heavy-Ball or Nesterov method for solving the minimization problem.\n"<<std::endl;
+      exit(1);
+     }
+     while(!flag){
+      ++k;
       // xnew computation and gradient evaluation
       grad=compute_grad(xnew);
-      xnew=xold-ak*grad;
+      xnew=update(xold,xold1,ak,grad,k);
 
       // check convergence
       flag=check_convergence(xold,xnew,k,grad);
+      
+      // alpha computation
+      ak= compute_alpha(xnew,k);
+
       //update
       xold=xnew;
-      ++k;
       }
-     std::cout<<"\ninterations: "<<k<<"\n"<<std::endl;
-     print(xnew);
+     std::cout<<"\nNumber of interations: "<<k<<"\n"<<std::endl;
     return xnew;
   }
 
@@ -97,6 +133,7 @@ class method{
     //compute alpha_k - inverse decay
     parameter_type inverse_decay(unsigned int k){return _input.a0/(1+_input.mu*k);}
 
+   
     parameter_type compute_alpha(vector & xk,unsigned int k){
     if (_input.a == Alpha::Armijo) {
         return Armijo(xk);
