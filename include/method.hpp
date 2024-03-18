@@ -1,6 +1,6 @@
 #include <functional>
-#include<vector>
-#include<cmath>
+#include <vector>
+#include <cmath>
 #include "helper.hpp"
 
 #ifndef METHOD_HPP
@@ -23,10 +23,10 @@ class method{
         _input.f=_f;
         _input.df=_df;
     };
+
     // evaluate gradient in a vector p by finite differences
     vector evaluate_gradient_diff(vector & p){
      vector result;
-     vector grad;
   
      for(size_t i=0;i<p.size();++i){
         vector v1(p);
@@ -48,36 +48,11 @@ class method{
      }
      return evaluate_gradient_diff(xk);
     }
-
-    // compute the minimizing x by gradient method
-    vector update(vector & xold, vector &xold1, parameter_type ak,vector & grad,unsigned int k){
-      if(_input.m==Method::Gradient){
-        return xold-ak*grad;
-      }else if(_input.m==Method::Heavy_Ball){
-        vector result;
-        if(k==1){
-          result=xold-ak*grad;
-        }else{
-          result=xold-ak*grad+_input.eta*(xold-xold1);
-        }
-        xold1=xold;
-        return result;
-      }else if(_input.m==Method::Nesterov){
-          vector result;
-          vector y;
-        if(k==1){
-          result=xold-ak*grad;
-        }else{
-          y=xold+_input.eta*(xold-xold1);
-          result=y-ak*compute_grad(y);
-        }
-        xold1=xold;
-        return result;
-      }
       
     }
     // solving the minimization problem
     vector solve(){
+
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;

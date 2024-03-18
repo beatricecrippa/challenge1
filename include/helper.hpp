@@ -1,13 +1,14 @@
+
 #include <vector>
 #include <cmath>
 #include <functional>
-#include<iostream>
+#include <iostream>
 
 
 typedef double value_type;
 typedef std::vector<value_type> vector;
-typedef float parameter_type;
 
+typedef float parameter_type;
 typedef std::function<value_type(vector)> functionR; // R^n -> R function
 typedef std::function<vector(vector)>  functionRn;  //  R^n -> R^n gradient
 
@@ -60,13 +61,13 @@ struct input{
     vector start{0,0};
 
     //Alpha computation mode
-    Alpha a=Alpha::Armijo;
+    Alpha a=Alpha::inverse_decay;
 
     //Gradient computation mode
     Diff d=Diff::Finite_diff;
     
     //Method for solving the minimization problem
-    Method m=Method::Heavy_Ball;
+    Method m=Method::Nesterov;
 };
 
 //Euclidean norm
@@ -105,7 +106,7 @@ vector operator-(vector lhs,vector rhs) {
 vector operator+(vector lhs,vector rhs) {
     vector result;
     if (lhs.size() != rhs.size()) {
-        std::cerr << "\nerror: cannot compute the subtraction between two vector with different size!\n"
+        std::cerr << "\nerror: cannot compute the sum between two vector with different size!\n"
                     << std::endl;
         exit(1);
     }
@@ -117,7 +118,7 @@ vector operator+(vector lhs,vector rhs) {
 
 
     //print vector
-void print(vector & x){
+void print(vector x){
     std::cout<<"\nThe vector is: [ ";
     for(std::size_t i=0;i<x.size();++i){
         std::cout<<" "<<x[i]<<" ";

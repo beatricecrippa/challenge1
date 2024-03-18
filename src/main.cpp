@@ -1,10 +1,10 @@
-#include <functional>
-#include <cmath>
+
 #include "helper.hpp"
 #include "method.hpp"
 #include "GetPot"
+
 value_type f1(vector points){
-   return points[0]*points[1]+4*std::pow(points[0],4)+std::pow(points[1],2)+2*points[0];
+   return (points[0]*points[1]+4*std::pow(points[0],4)+std::pow(points[1],2)+2*points[0]);
 }
 
 vector df1(vector points){
