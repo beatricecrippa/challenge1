@@ -1,16 +1,15 @@
-
 #include <vector>
 #include <cmath>
 #include <functional>
 #include <iostream>
 
 
+
 typedef double value_type;
-typedef std::vector<value_type> vector;
 
 typedef float parameter_type;
-typedef std::function<value_type(vector)> functionR; // R^n -> R function
-typedef std::function<vector(vector)>  functionRn;  //  R^n -> R^n gradient
+typedef std::function<value_type(std::vector<value_type>)> functionR; // R^n -> R function
+typedef std::function<std::vector<value_type>(std::vector<value_type>)>  functionRn;  //  R^n -> R^n gradient
 
 #ifndef HELPER_HPP
 #define HELPER_HPP
@@ -30,7 +29,7 @@ enum class Diff{
 };
 
 // this class allow to choose the method for solving the problem of minimization
-enum class Method{
+enum class Mode{
     Gradient,
     Heavy_Ball,
     Nesterov
@@ -57,21 +56,21 @@ struct input{
     parameter_type eta=0.9;
 
     // initial guess
-    parameter_type a0=1;
-    vector start{0,0};
+    parameter_type a0=0.1;
+    std::vector<value_type> start{0,0};
 
     //Alpha computation mode
-    Alpha a=Alpha::inverse_decay;
+    Alpha a=Alpha::Armijo;
 
     //Gradient computation mode
     Diff d=Diff::Finite_diff;
     
     //Method for solving the minimization problem
-    Method m=Method::Nesterov;
+    Mode m=Mode::Gradient;
 };
 
 //Euclidean norm
-value_type euclidean_norm(vector v){
+value_type euclidean_norm(const std::vector<value_type> & v){
     value_type norm=0;
     for(size_t i=0;i<v.size();++i){
         norm+=std::pow(v[i],2);
@@ -80,8 +79,8 @@ value_type euclidean_norm(vector v){
 }
 
 //operator *
-vector operator*(parameter_type scalar,vector a){
-    vector result;
+std::vector<value_type> operator*(const parameter_type scalar,const std::vector<value_type> & a){
+    std::vector<value_type> result;
     for (std::size_t i = 0; i < a.size(); ++i) {
         result.push_back(scalar*a[i]);
     }
@@ -89,8 +88,8 @@ vector operator*(parameter_type scalar,vector a){
 }
 
 //operator -
-vector operator-(vector lhs,vector rhs) {
-    vector result;
+std::vector<value_type> operator-(const std::vector<value_type> & lhs,const std::vector<value_type> & rhs) {
+    std::vector<value_type> result;
     if (lhs.size() != rhs.size()) {
         std::cerr << "\nerror: cannot compute the subtraction between two vector with different size!\n"
                     << std::endl;
@@ -103,8 +102,8 @@ vector operator-(vector lhs,vector rhs) {
 }
 
     //operator +
-vector operator+(vector lhs,vector rhs) {
-    vector result;
+std::vector<value_type> operator+(const std::vector<value_type> & lhs,const std::vector<value_type> & rhs) {
+    std::vector<value_type> result;
     if (lhs.size() != rhs.size()) {
         std::cerr << "\nerror: cannot compute the sum between two vector with different size!\n"
                     << std::endl;
@@ -118,7 +117,7 @@ vector operator+(vector lhs,vector rhs) {
 
 
     //print vector
-void print(vector x){
+void print(const std::vector<value_type> & x){
     std::cout<<"\nThe vector is: [ ";
     for(std::size_t i=0;i<x.size();++i){
         std::cout<<" "<<x[i]<<" ";
