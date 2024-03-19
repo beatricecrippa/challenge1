@@ -2,7 +2,8 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
-
+#include <map>
+#include <iomanip>
 
 
 typedef double value_type;
@@ -21,6 +22,14 @@ enum class Alpha{
     inverse_decay,
 };
 
+// Map to convert between string representation and enum value
+const std::map<std::string, Alpha> alpha_map = {
+    {"Armijo", Alpha::Armijo},
+    {"exponential_decay", Alpha::exponential_decay},
+    {"inverse_decay", Alpha::inverse_decay},
+    {"",Alpha::Armijo}
+};
+
 
 // this class allows to choose the computational method for the gradient
 enum class Diff{
@@ -28,11 +37,26 @@ enum class Diff{
     User_grad
 };
 
+// Map to convert between string representation and enum value
+const std::map<std::string, Diff> diff_map = {
+    {"Finite_diff", Diff::Finite_diff},
+    {"User_grad", Diff::User_grad},
+    {"",Diff::Finite_diff}
+};
+
 // this class allow to choose the method for solving the problem of minimization
 enum class Mode{
     Gradient,
     Heavy_Ball,
     Nesterov
+};
+
+// Map to convert between string representation and enum value
+const std::map<std::string, Mode> mode_map = {
+    {"Gradient", Mode::Gradient},
+    {"Heavy_Ball", Mode::Heavy_Ball},
+    {"Nesterov",Mode::Nesterov},
+    {"",Mode::Gradient}
 };
 
 struct input{
@@ -68,6 +92,52 @@ struct input{
     //Method for solving the minimization problem
     Mode m=Mode::Gradient;
 };
+
+    //print vector
+void print_vector(const std::vector<value_type> & x){
+    std::cout<<"[ ";
+    for(std::size_t i=0;i<x.size();++i){
+        std::cout<<" "<<x[i]<<" ";
+    }
+    std::cout<<" ]"<<std::endl;
+
+}
+
+void print_struct(input i){
+    std::cout<<"\n\t---Parameters---\n";
+    std::cout<<"\nControl on the residual:\t\t\teps_r = "<<i.eps_r;
+    std::cout<<"\nControl on the step length:\t\t\teps_s = "<<i.eps_s;
+    std::cout<<"\nMaximum number of iterations:\t\t\tk_max = "<<i.it;
+    std::cout<<"\nParameters needed by the Armijo rule:\t\tsigma = "<<i.sigma<<"\t\tmu = "<<i.mu;
+    std::cout<<"\nParameter needed by the Heavy-Ball method:\teta = "<<i.eta;
+    std::cout<<"\nInitial guesses:\t\t\t\talpha_zero = "<<i.a0<<"\tstart_vector = ";
+    print_vector(i.start);
+    std::cout<<"\n\t---Problem resolution choices---\n";
+    std::cout<<"\nMethod for solving the minimization problem: ";
+    if(i.m==Mode::Gradient){
+        std::cout<<"Gradient";
+    }else if(i.m==Mode::Heavy_Ball){
+        std::cout<<"Heavy-Ball";
+    }else if(i.m==Mode::Nesterov){
+        std::cout<<"Nesterov";
+    }
+    std::cout<<"\nMethod for update alpha: ";
+    if(i.a==Alpha::Armijo){
+        std::cout<<"Armijo";
+    }else if(i.a==Alpha::exponential_decay){
+        std::cout<<"exponential decay";
+    }else if(i.a==Alpha::inverse_decay){
+        std::cout<<"inverse decay";
+    }
+    std::cout<<"\nMethod for computing the gradient: ";
+    if(i.d==Diff::Finite_diff){
+        std::cout<<"Finite differences";
+    }else if(i.d==Diff::User_grad){
+        std::cout<<"Gradient given by the user";
+    }
+    std::cout<<"\n-------------------------------------------------\n";
+
+}
 
 //Euclidean norm
 value_type euclidean_norm(const std::vector<value_type> & v){
@@ -116,14 +186,6 @@ std::vector<value_type> operator+(const std::vector<value_type> & lhs,const std:
 }
 
 
-    //print vector
-void print(const std::vector<value_type> & x){
-    std::cout<<"\nThe vector is: [ ";
-    for(std::size_t i=0;i<x.size();++i){
-        std::cout<<" "<<x[i]<<" ";
-    }
-    std::cout<<" ]"<<std::endl;
 
-}
 
 #endif

@@ -16,40 +16,31 @@ class method{
  public:
 
     //constructor
-    method(input &i): _input(i){};
+    method()=default;
+    method(input &i): _input(i){print_struct(_input);};
     //constructor by passing as parameter only f and df
     method(functionR  _f, functionRn  _df){
         _input.f=_f;
         _input.df=_df;
     };
-    
+     void set_mode(Mode _m){
+         _input.m=_m;
+     }
+
+     void set_alpha(Alpha _a){
+         _input.a=_a;
+     }
+     void set_diffcomp(Diff _d){
+         _input.d=_d;
+     }
     void set_eta(parameter_type value){
       _input.eta=value;
     }
-    // evaluate gradient in a vector p by finite differences
-    std::vector<value_type> evaluate_gradient_diff(const std::vector<value_type> & p){
-     std::vector<value_type> result;
-     for(size_t i=0;i<p.size();++i){
-        std::vector<value_type> v1(p),v2(p);
-        v1[i]+=h;
-        v2[i]-=h;
-        result.push_back((_input.f(v1)-_input.f(v2))/(2.*h));
-     }
-    return result;
-    }
 
-    // grad computation
-     std::vector<value_type> compute_grad(const std::vector<value_type> & xk){
-     if (_input.d==Diff::Finite_diff){
-        return evaluate_gradient_diff(xk);
-     }else if(_input.d==Diff::User_grad){
-        return _input.df(xk);
-     }
-     return evaluate_gradient_diff(xk);
-    }
     
     // solving the minimization problem
     std::vector<value_type> solve(){
+      print_struct(_input);
       if(_input.m==Mode::Gradient){
         return gradient_descendant();
       }else if(_input.m==Mode::Heavy_Ball){
@@ -66,7 +57,7 @@ class method{
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;
-     std::vector<value_type> grad;
+     std::vector<value_type> grad((_input.start).size(),0);
      std::vector<value_type> xold(_input.start);
      std::vector<value_type> xnew(_input.start);
      std::vector<value_type> xold1(_input.start);
@@ -81,7 +72,19 @@ class method{
       ++k;
 
       //gradient evaluation
-      grad=compute_grad(xold);
+      switch(_input.d){
+        case Diff::Finite_diff:
+         for(size_t i=0;i<xold.size();++i){
+          std::vector<value_type> v1(xold),v2(xold);
+          v1[i]+=h;
+          v2[i]-=h;
+          grad[i]=((_input.f(v1)-_input.f(v2))/(2.*h));
+         }
+         break;
+         case Diff::User_grad:
+         grad=_input.df(xold);
+         break;
+      }
 
       //xnew computation
       if(k==1){
@@ -101,7 +104,7 @@ class method{
       xold=xnew;
 
       }
-     std::cout<<"\nNumber of interations: "<<k<<"\n"<<std::endl;
+     std::cout<<"Number of interations: "<<k<<"\n"<<std::endl;
     return xnew;
   }
   // gradient descendant
@@ -110,7 +113,7 @@ class method{
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;
-     std::vector<value_type> grad;
+      std::vector<value_type> grad((_input.start).size(),0);
      std::vector<value_type> xold(_input.start);
      std::vector<value_type> xnew(_input.start);
 
@@ -119,7 +122,19 @@ class method{
       ++k;
 
       //gradient evaluation
-      grad=compute_grad(xold);
+      switch(_input.d){
+        case Diff::Finite_diff:
+         for(size_t i=0;i<xold.size();++i){
+          std::vector<value_type> v1(xold),v2(xold);
+          v1[i]+=h;
+          v2[i]-=h;
+          grad[i]=((_input.f(v1)-_input.f(v2))/(2.*h));
+         }
+         break;
+         case Diff::User_grad:
+         grad=_input.df(xold);
+         break;
+      }
 
       //xnew computation
       xnew=xold-ak*grad;
@@ -134,7 +149,7 @@ class method{
       xold=xnew;
 
       }
-     std::cout<<"\nNumber of interations: "<<k<<"\n"<<std::endl;
+     std::cout<<"Number of interations: "<<k<<"\n"<<std::endl;
     return xnew;
   }
 
@@ -144,7 +159,8 @@ class method{
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;
-     std::vector<value_type> grad;
+      std::vector<value_type> grad((_input.start).size(),0);
+      std::vector<value_type> grad_y((_input.start).size(),0);
      std::vector<value_type>  xold(_input.start);
      std::vector<value_type>  xold1(_input.start);
      std::vector<value_type> xnew(_input.start);
@@ -158,14 +174,41 @@ class method{
       // update number of iterations
       ++k;
 
-      //gradient evaluation
-      grad=compute_grad(xold);
+        //gradient evaluation
+      switch(_input.d){
+        case Diff::Finite_diff:
+         for(size_t i=0;i<xold.size();++i){
+          std::vector<value_type> v1(xold),v2(xold);
+          v1[i]+=h;
+          v2[i]-=h;
+          grad.emplace_back((_input.f(v1)-_input.f(v2))/(2.*h));
+         }
+         break;
+         case Diff::User_grad:
+         grad=_input.df(xold);
+         break;
+      }
+
+        //gradient y evaluation
+      switch(_input.d){
+        case Diff::Finite_diff:
+         for(size_t i=0;i<(xold+_input.eta*(xold-xold1)).size();++i){
+          std::vector<value_type> v1(xold+_input.eta*(xold-xold1)),v2(xold+_input.eta*(xold-xold1));
+          v1[i]+=h;
+          v2[i]-=h;
+          grad_y[i]=(_input.f(v1)-_input.f(v2))/(2.*h);
+         }
+         break;
+         case Diff::User_grad:
+         grad_y=_input.df(xold+_input.eta*(xold-xold1));
+         break;
+      }
 
       //xnew computation
       if(k==1){
         xnew=xold-ak*grad;
       }else{
-        xnew=xold+_input.eta*(xold-xold1)-ak*compute_grad(xold+_input.eta*(xold-xold1));
+        xnew=xold+_input.eta*(xold-xold1)-ak*grad_y;
       }
 
       // check convergence
@@ -182,7 +225,7 @@ class method{
       xold=xnew;
 
       }
-     std::cout<<"\nNumber of interations: "<<k<<"\n"<<std::endl;
+     std::cout<<"Number of interations: "<<k<<"\n"<<std::endl;
     return xnew;
   }
 
@@ -192,9 +235,9 @@ class method{
         if(k>_input.it){
           std::cout<<"\nLimit of the max number of iterations: no convergence is reached.\n"<<std::endl;
         }else if(euclidean_norm(xold-xnew)<_input.eps_s){
-          std::cout<<"\nControl on the step lenght: ?x_k+1 - x_k? < ?s\n"<<std::endl;
+          std::cout<<"\nThe convergence is reached:  ∥ x_k+1 - x_k ∥ < ε_s\n"<<std::endl;
         }else if(euclidean_norm(grad)<_input.eps_r){
-          std::cout<<"\nControl on the residual: ??f(x_k)? < ?r\n"<<std::endl;
+          std::cout<<"\nThe convergence is reached: ∥ ∇ f(x_k) ∥ < ε_r\n"<<std::endl;
         }
         return k>_input.it or euclidean_norm(xold-xnew)<_input.eps_s or euclidean_norm(grad)<_input.eps_r;
     }
@@ -203,8 +246,23 @@ class method{
     //compute alpha_k - Armijo rule
    parameter_type Armijo(std::vector<value_type> & xk){
       parameter_type ak=_input.a0;
-      value_type gradient_norm_squared=pow(euclidean_norm((evaluate_gradient_diff(xk))),2);
-      while(_input.f(xk)-_input.f(xk-ak*evaluate_gradient_diff(xk))<_input.sigma*ak*gradient_norm_squared){
+       std::vector<value_type> grad((_input.start).size(),0);
+      switch(_input.d){
+        case Diff::Finite_diff:
+         for(size_t i=0;i<xk.size();++i){
+          std::vector<value_type> v1(xk),v2(xk);
+          v1[i]+=h;
+          v2[i]-=h;
+          grad[i]=(_input.f(v1)-_input.f(v2))/(2.*h);
+         }
+         break;
+         case Diff::User_grad:
+         grad=_input.df(xk);
+         break;
+      }
+
+      value_type gradient_norm_squared=pow(euclidean_norm((grad)),2);
+      while(_input.f(xk)-_input.f(xk-ak*grad)<_input.sigma*ak*gradient_norm_squared){
       ak/=2;
     }
     return ak;
