@@ -5,24 +5,23 @@
 
 #ifndef METHOD_HPP
 #define METHOD_HPP
+
+// this class allows to perform the computations to resolve the minimization problem
 class method{
   private:
-    
-    // struct containing all the elements nneded by the computation
+    // struct containing all the parameters needed by the computation
     input _input;
-    // contant used to evaluate the finite differences derivative
+    // constant used to evaluate the finite differences derivative
     static constexpr double h=0.00001;
  
  public:
-
-    //constructor
+    // constructor
     method()=default;
-    //constructor by passing the struct
+    // constructor by passing the struct
     method(input &i): _input(i){print_struct(_input);};
 
-
+    // solve the problem 
     std::vector<value_type> solve(){
-
      bool flag=false;
      parameter_type ak=_input.a0;
      unsigned int k=0;
@@ -38,25 +37,27 @@ class method{
       exit(1);
      }
      while(!flag){
-      // update number of iterations
-      ++k;
 
-      //gradient evaluation
-      switch(_input.d){
-        case Diff::Finite_diff:
-         for(size_t i=0;i<xold.size();++i){
-          std::vector<value_type> v1(xold),v2(xold);
-          v1[i]+=h;
-          v2[i]-=h;
-          grad[i]=((_input.f(v1)-_input.f(v2))/(2.*h));
-         }
-         break;
-         case Diff::User_grad:
-         grad=_input.df(xold);
-         break;
+    // update number of iterations
+    ++k;
+
+    //gradient evaluation
+    switch(_input.d){
+      case Diff::finite_diff:
+        for(size_t i=0;i<xold.size();++i){
+        std::vector<value_type> v1(xold),v2(xold);
+        v1[i]+=h;
+        v2[i]-=h;
+        grad[i]=((_input.f(v1)-_input.f(v2))/(2.*h));
+        }
+      break;
+      case Diff::user_grad:
+        grad=_input.df(xold);
+      break;
+       
       }
 
-      //xnew update
+      // xnew update
       switch(_input.m){
         case Mode::Heavy_Ball:
         if(k==1){
@@ -65,37 +66,24 @@ class method{
         xnew=xold-ak*grad+_input.eta*(xold-xold1);
       }
       break;
-      case Mode::Gradient:
+      case Mode::gradient:
         xnew=xold-ak*grad;
         break;
       case Mode::Nesterov:
-           //gradient y evaluation
+      // gradient y evaluation
       switch(_input.d){
-        case Diff::Finite_diff:
+       case Diff::finite_diff:
          for(size_t i=0;i<(xold+_input.eta*(xold-xold1)).size();++i){
           std::vector<value_type> v1(xold+_input.eta*(xold-xold1)),v2(xold+_input.eta*(xold-xold1));
           v1[i]+=h;
           v2[i]-=h;
           grad_y[i]=(_input.f(v1)-_input.f(v2))/(2.*h);
          }
-         break;
-         case Diff::User_grad:
-         grad_y=_input.df(xold+_input.eta*(xold-xold1));
-         break;
+       break;
+       case Diff::user_grad:
+        grad_y=_input.df(xold+_input.eta*(xold-xold1));
+        break;
       }
-
-      //xnew computation
-      if(k==1){
-        xnew=xold-ak*grad;
-      }else{
-        xnew=xold+_input.eta*(xold-xold1)-ak*grad_y;
-      }
-      break;
-      }
-      
-
-      // check convergence
-      flag=check_convergence(xold,xnew,k,grad);
       
       // alpha computation
       switch(_input.a){
@@ -113,7 +101,21 @@ class method{
         break;
       }
 
-      //update
+      // xnew computation
+      if(k==1){
+        xnew=xold-ak*grad;
+      }else{
+        xnew=xold+_input.eta*(xold-xold1)-ak*grad_y;
+      }
+      break;
+      }
+      
+
+      // check convergence
+      flag=check_convergence(xold,xnew,k,grad);
+      
+
+      // update
       xold1=xold;
       xold=xnew;
 
@@ -124,7 +126,7 @@ class method{
   
 
 
-    //check convergence
+  // check convergence
    bool check_convergence(std::vector<value_type> & xold,std::vector<value_type> & xnew, unsigned int k,std::vector<value_type> & grad)const{
         if(k>_input.it){
           std::cout<<"\nLimit of the max number of iterations: no convergence is reached.\n"<<std::endl;
