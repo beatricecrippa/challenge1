@@ -41,9 +41,9 @@ Add one of the following keywords after ```./main``` to decide the method to use
 
 | Key word             | meaning                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| gradient | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29&bc=Transparent&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| Heavy-Ball | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%20%3Dx_%7Bk%7D%20-%20%5Calpha%20_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29%20%2B%20%5Ceta%2A%28x_%7Bk%7D-x_%7Bk%E2%88%921%7D%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| Nesterov |![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%20%3D%20x_%7Bk%7D%20%2B%5Ceta%2A%28x_%7Bk%7D%20-%20x_%7Bk-1%7D%29%20-%20%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%20%2B%5Ceta%2A%28x_%7Bk%7D%20-%20x_%7Bk-1%7D%29%29%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
+| gradient | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
+| Heavy-Ball | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
+| Nesterov |![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
 
 Add one of the following keywords  after ```./main``` to decide the method to use to compute the learning rate at each iteration 
 
