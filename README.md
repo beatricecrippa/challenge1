@@ -41,18 +41,18 @@ Add one of the following keywords after ```./main``` to decide the method to use
 
 | Key word             | meaning                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| gradient | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| Heavy-Ball | ![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| Nesterov |![equation](http://www.sciweavers.org/tex2img.php?eq=x_%7Bk%2B1%7D%3Dx_%7Bk%7D%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29-%5Calpha_%7Bk%7D%2A%5Cnabla%20f%28x_%7Bk%7D%2B%5Ceta%2A%28x_%7Bk%7D-x_%7Bk-1%7D%29%29&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
+| gradient | Apply the gradient method |
+| Heavy-Ball | Apply the Heavy-Ball method | 
+| Nesterov | Apply the Nesterov method|
 
 Add one of the following keywords  after ```./main``` to decide the method to use to compute the learning rate at each iteration 
 
 
 | Key word             | meaning                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| inverse_decay| ![equation](http://www.sciweavers.org/tex2img.php?eq=%5Calpha_%7Bk%7D%3D%5Cfrac%7B%5Calpha_%7B0%7D%7D%7B%281%20%2B%20%5Cmu%2Ak%29%7D&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| exponential_decay | ![equation](http://www.sciweavers.org/tex2img.php?eq=%5Calpha_%7Bk%7D%3D%7B%5Calpha_%7B0%7D%7D%2Ae%5E%7B%281%20%2B%20%5Cmu%2Ak%29%7D&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) |
-| Armijo | ![equation](http://www.sciweavers.org/tex2img.php?eq=%5Calpha_%7B0%7D%3D%5Cfrac%7B%5Calpha_%7B0%7D%7D%7B2%7D&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) until ![equation](http://www.sciweavers.org/tex2img.php?eq=f%28x_%7Bk%7D%29-f%28x_%7Bk%7D-%5Calpha_%7B0%7D%2A%5Cnabla%20f%28x_%7Bk%7D%29%29%20%5Cgeq%20%5Csigma%2A%5Calpha_%7B0%7D%20%5Cparallel%20%5Cnabla%2Af%28x_%7Bk%7D%29%29%20%5Cparallel%20%5E2%0A&bc=White&fc=Black&im=jpg&fs=12&ff=mathdesign&edit=0) is reached|
+| inverse_decay| computing learning rate with inverse decay formula |
+| exponential_decay | computing learning rate with exponential decay formula |
+| Armijo | computing learning rate with aRmijo rule|
 
 Add one of the following keywords after ```./main``` to decide the method to compute the gradient  
 
@@ -61,3 +61,4 @@ Add one of the following keywords after ```./main``` to decide the method to com
 | ----------------- | ------------------------------------------------------------------ |
 | user_grad | the gradient is given by the user |
 | finite_diff | the gradient is calculated with the finite differences method |
+
