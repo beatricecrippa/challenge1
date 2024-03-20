@@ -14,15 +14,17 @@ int main(int argc, char **argv){
     // argv[1]: Mode (Gradient, Heavy_Ball, Nesterov)
     // argv[2]: Alpha (inverse_decay, exponential_decay, Armijo)
     // argv[3]: Grad computation (User_grad, Finite_diff)
-    method m{f1,df1};
+    input i;
+    i.f=f1;
+    i.df=df1;
     if(argc==4)
 {
-        m.set_mode(mode_map.at(argv[1]));
-        m.set_alpha(alpha_map.at(argv[2]));
-        m.set_diffcomp(diff_map.at(argv[3]));
+        i.m=(mode_map.at(argv[1]));
+        i.a=(alpha_map.at(argv[2]));
+        i.d=(diff_map.at(argv[3]));
 }        
     
-   
+    method m(i);
     std::vector<value_type> solution=m.solve();
     std::cout<<"\nSolution: ";
     print_vector(solution);
