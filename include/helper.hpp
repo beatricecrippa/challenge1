@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <iomanip>
+#include "../src/GetPot"
 
 
 
@@ -40,7 +41,7 @@ enum class Mode{
 struct input{
 
     // exact solution
-    std::vector<value_type> sol;
+    std::vector<value_type> ex_sol;
     
     // function and its gradient, given by the user
     functionR f;
@@ -50,21 +51,21 @@ struct input{
     const value_type h=0.00001;
 
     // control on the residual
-    value_type eps_r=1e-6;
+    value_type eps_r;
     // control on the step length
-    value_type eps_s=1e-6;
+    value_type eps_s;
     // maximum number of iterations
-    unsigned int it=1000;
+    unsigned int it;
     
     // parameters needed by the Armijo rule
-    value_type sigma=0.1;
-    value_type mu=0.2;
+    value_type sigma;
+    value_type mu;
 
     // parameter needed by the Heavy-Ball method
-    value_type eta=0.7;
+    value_type eta;
 
     // initial guesses
-    value_type a0=0.1;
+    value_type a0;
     std::vector<value_type> start{0.,0.};
 };
 
@@ -75,6 +76,31 @@ void print_vector(const std::vector<value_type> & x){
         std::cout<<" "<<x[i]<<" ";
     }
     std::cout<<" ]"<<std::endl;
+
+}
+
+// read struct values by command line
+input read_cl(GetPot cl){
+    input i;
+
+    // control on the residual
+    i.eps_r=cl("eps_r",1e-6);
+    // control on the step length
+    i.eps_s=cl("eps_s",1e-6);
+    // maximum number of iterations
+    i.it=cl("it",1000);
+    
+    // parameters needed by the Armijo rule
+    i.sigma=cl("sigma",0.1);
+    i.mu=cl("mu",0.2);
+
+    // parameter needed by the Heavy-Ball method
+    i.eta=cl("eta",0.7);
+
+    // initial guesses
+    i.a0=cl("a0",0.1);
+
+    return i;
 
 }
 

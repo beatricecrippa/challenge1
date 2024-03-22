@@ -111,7 +111,7 @@
 
       }
 
-     double err=euclidean_norm(_input.sol-xnew);
+     double err=euclidean_norm(_input.ex_sol-xnew);
      std::cout<<"Number of interations: "<<k<<"\n"<<std::endl;
      std::cout<<"Error between the computed solution and the exact solution: "<<err<<"\n"<<std::endl;
     return xnew;
