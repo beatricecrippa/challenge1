@@ -1,64 +1,76 @@
-# Challenge 1
-This repository contains the implementation of an optimization algorithm aiming to find the minimum of a given function. 
+# Challenge 1: A gradient method for the minimization of a multivariate function
 
-The user is free to choose:
-+ The method used to compute the gradient (by finite differences or given the gradient of the function)
-+ The method used to compute the learning rate alpha_k (by inverse decay, exponential decay or the Armijo rule)
-+ The method used to solve the minimization problem (by the gradient method, by the Heavy-Ball method or by the Nesterov method). If Nesterov or Heavy-Ball are choosen, the program won't resolve the problem if the computational method for the learning rate is the Armijo rule, because the update direction is not guaranteeded to be a descent direction.
+### Introduction
+Optimization algorithms play a crucial role in numerous computational tasks, ranging from machine learning model training to scientific simulations. This repository hosts an implementation of an optimization algorithm designed to efficiently discover the minimum of a specified function.
+### Features
+By modifying line 20 in the main file, users can select various configurations, including the method for computing the gradient, the approach for computing the learning rate (alpha_k), and the method used to solve the minimization problem.
 
+With this flexibility, users can adapt the optimization algorithm to suit their specific computational requirements, optimizing performance while minimizing computational resources.
+
+This customization is facilitated by the solve function, which utilizes three enum classes as templates:
+
+```C++
+// Enum class enabling the selection of a method for computing alpha_k
+enum class Alpha{
+    Armijo,
+    exponential_decay,
+    inverse_decay,
+};
+
+// Enum class allowing the choice of gradient computation method
+
+enum class Diff{
+    finite_diff,
+    user_grad
+};
+
+// Enum class enabling the selection of a method for solving the minimization problem
+enum class Mode{
+    gradient,
+    Heavy_Ball,
+    Nesterov
+};
+```
+### Repository Contents
++ include: Contains header files, including method.hpp and helper.hpp.
++ src: Contains source code files, with main.cpp being the primary file.
++ Makefile: Provides basic setup for compiling the C++ project.
+
+Contents of helper.hpp
+
++ Typedefs
++ Enum classes for configuration
++ Struct aggregating computation parameters
++ Functions for vector and struct printing
++ Euclidean norm computation function
++ Operators for vector computations (scalar product, subtraction, and addition)
+
+Contents of method.hpp
++ Function to check convergence of the method
++ Function to compute the gradient
++ Function to solve the minimization problem
 ### Requirements
-+ C++ compiler compatible with C++20 standard.
-+ Git for cloning the repository.
-+ Make utility for compiling the code.
-
-
-## Run Locally
-
-Clone the project
-
++ C++ compiler compatible with C++20 standard
++ Git for cloning the repository
++ Make utility for compiling the code
+### Running Locally
+Clone the project:
 ```bash
-  git clone git@github.com:irene-fagnani/challenge1.git
+    git clone git@github.com:irene-fagnani/challenge1.git
 ```
-
-Compile the code
-
+Compile the code:
 ```bash
-  make
+    make
 ```
-
-Run the challenge in the default mode (so applying the Gradient method, the Armijo rule to compute alpha and the finite differences method to compute the gradient)
-
+Run the challenge:
 ```bash
-  ./main
+    ./main
 ```
-Run other methods (eg. Heavy-Ball or Nesterov, use the gradient given by the user, compute alpha with the exponential or inverse decay rule)
+To employ different methods (e.g., Heavy-Ball or Nesterov, use the gradient provided by the user, compute alpha with exponential or inverse decay), modify the solve function template brackets in src/main.cpp at line 20 to specify the desired method, according to the enum classes showed above.
 
-```bash
-  ./main Nesterov user_grad inverse_decay
-```
-Add one of the following keywords after ```./main``` to decide the method to use to solve the minimization problem  
-
-
-| Key word             | meaning                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| gradient | Apply the gradient method |
-| Heavy-Ball | Apply the Heavy-Ball method | 
-| Nesterov | Apply the Nesterov method|
-
-Add one of the following keywords  after ```./main``` to decide the method to use to compute the learning rate at each iteration 
-
-
-| Key word             | meaning                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| inverse_decay| computing learning rate with inverse decay formula |
-| exponential_decay | computing learning rate with exponential decay formula |
-| Armijo | computing learning rate with aRmijo rule|
-
-Add one of the following keywords after ```./main``` to decide the method to compute the gradient  
-
-
-| Key word             | meaning                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| user_grad | the gradient is given by the user |
-| finite_diff | the gradient is calculated with the finite differences method |
-
++ First field: Gradient computation method
++ Second field: Learning rate (alpha) computation method
++ Third field: Method for solving the minimization problem
+### Lessons Learned
++ Importance of documenting with README.md
++ Utilization of templates and if constexpr statements                                  

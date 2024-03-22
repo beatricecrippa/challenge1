@@ -15,20 +15,21 @@ typedef std::function<std::vector<value_type>(std::vector<value_type>)>  functio
 #ifndef HELPER_HPP
 #define HELPER_HPP
 
-// this class allows to choose a method for the computation of alpha k
+// Enum class enabling the selection of a method for computing alpha_k
 enum class Alpha{
     Armijo,
     exponential_decay,
     inverse_decay,
 };
 
-// this class allows to choose the computational method for the gradient
+// Enum class allowing the choice of gradient computation method
+
 enum class Diff{
     finite_diff,
     user_grad
 };
 
-// this class allow to choose the method for solving the minimization problem
+// Enum class enabling the selection of a method for solving the minimization problem
 enum class Mode{
     gradient,
     Heavy_Ball,
