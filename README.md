@@ -44,11 +44,13 @@ Contents of helper.hpp
 + Typedefs
 + Enum classes for configuration
 + Struct aggregating computation parameters
++ Function to read from command line and updating the corresponding field in the struct
 + Functions for vector and struct printing
 + Euclidean norm computation function
 + Operators for vector computations (scalar product, subtraction, and addition)
 
 Contents of method.hpp
+
 + Function to check convergence of the method
 + Function to compute the gradient
 + Function to solve the minimization problem
@@ -71,6 +73,10 @@ Run the challenge:
 ```
 To employ different methods (e.g., Heavy-Ball or Nesterov, use the gradient provided by the user, compute alpha with exponential or inverse decay), modify the solve function template brackets in src/main.cpp at line 23 to specify the desired method, according to the enum classes showed above.
 
++ First field: Gradient computation method
++ Second field: Learning rate (alpha) computation method
++ Third field: Method for solving the minimization problem
+
 
 To set the parameters required by the algorithm, it is possible, thanks to the GetPot library, to pass the parameters through the command line, for example:
 
@@ -80,11 +86,38 @@ To set the parameters required by the algorithm, it is possible, thanks to the G
 
 Otherwise, if only `./main` is executed, the parameters will be fixed by default (for example, by default, the maximum number of iterations is set to it=1000).
 
+Thanks to the following function and the GetPot library, the values passed through the command line will be saved in the corresponding field in the 'input' struct, which contains all the parameters. Below you can see the parameters set by default if not specified in the command line, along with the respective entry to indicate in the command line if you want to modify the value.
+
+```C++
+
+// read struct values by command line
+input read_cl(GetPot cl){
+    input i;
+
+    // control on the residual
+    i.eps_r=cl("eps_r",1e-6);
+    // control on the step length
+    i.eps_s=cl("eps_s",1e-6);
+    // maximum number of iterations
+    i.it=cl("it",1000);
+    
+    // parameters needed by the Armijo rule
+    i.sigma=cl("sigma",0.1);
+    i.mu=cl("mu",0.2);
+
+    // parameter needed by the Heavy-Ball method
+    i.eta=cl("eta",0.7);
+
+    // initial guesses
+    i.a0=cl("a0",0.1);
+
+    return i;
+
+}
+```
 
 
-+ First field: Gradient computation method
-+ Second field: Learning rate (alpha) computation method
-+ Third field: Method for solving the minimization problem
+
 ### Lessons Learned
 + Importance of documenting with README.md
 + Utilization of templates and if constexpr statements
