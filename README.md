@@ -3,7 +3,7 @@
 ### Introduction
 Optimization algorithms play a crucial role in numerous computational tasks, ranging from machine learning model training to scientific simulations. This repository hosts an implementation of an optimization algorithm designed to efficiently discover the minimum of a specified function.
 ### Features
-By modifying line 20 in the main file, users can select various configurations, including the method for computing the gradient, the approach for computing the learning rate (alpha_k), and the method used to solve the minimization problem.
+By modifying line 23 in the main file, users can select various configurations, including the method for computing the gradient, the approach for computing the learning rate (alpha_k), and the method used to solve the minimization problem.
 
 With this flexibility, users can adapt the optimization algorithm to suit their specific computational requirements, optimizing performance while minimizing computational resources.
 
@@ -31,6 +31,9 @@ enum class Mode{
     Nesterov
 };
 ```
+
+Using the Getpot library, the user also has the possibility to set the numerical parameters required for solving the minimization problem.
+
 ### Repository Contents
 + include: Contains header files, including method.hpp and helper.hpp.
 + src: Contains source code files, with main.cpp being the primary file.
@@ -66,11 +69,23 @@ Run the challenge:
 ```bash
     ./main
 ```
-To employ different methods (e.g., Heavy-Ball or Nesterov, use the gradient provided by the user, compute alpha with exponential or inverse decay), modify the solve function template brackets in src/main.cpp at line 20 to specify the desired method, according to the enum classes showed above.
+To employ different methods (e.g., Heavy-Ball or Nesterov, use the gradient provided by the user, compute alpha with exponential or inverse decay), modify the solve function template brackets in src/main.cpp at line 23 to specify the desired method, according to the enum classes showed above.
+
+
+To set the parameters required by the algorithm, it is possible, thanks to the GetPot library, to pass the parameters through the command line, for example:
+
+```bash
+    ./main it=10000
+```
+
+Otherwise, if only `./main` is executed, the parameters will be fixed by default (for example, by default, the maximum number of iterations is set to it=1000).
+
+
 
 + First field: Gradient computation method
 + Second field: Learning rate (alpha) computation method
 + Third field: Method for solving the minimization problem
 ### Lessons Learned
 + Importance of documenting with README.md
-+ Utilization of templates and if constexpr statements                                  
++ Utilization of templates and if constexpr statements
++ Utilization of GetPot library                                 
