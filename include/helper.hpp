@@ -6,6 +6,7 @@
 #include <iomanip>
 
 
+
 // type definitions
 typedef double value_type;
 typedef std::function<value_type(std::vector<value_type>)> functionR; // R^n -> R function
@@ -21,26 +22,10 @@ enum class Alpha{
     inverse_decay,
 };
 
-// Map to convert between string representation and enum value
-const std::map<std::string, Alpha> alpha_map = {
-    {"Armijo", Alpha::Armijo},
-    {"exponential_decay", Alpha::exponential_decay},
-    {"inverse_decay", Alpha::inverse_decay},
-    {"",Alpha::Armijo}
-};
-
-
 // this class allows to choose the computational method for the gradient
 enum class Diff{
     finite_diff,
     user_grad
-};
-
-// Map to convert between string representation and enum value
-const std::map<std::string, Diff> diff_map = {
-    {"finite_diff", Diff::finite_diff},
-    {"user_grad", Diff::user_grad},
-    {"",Diff::finite_diff}
 };
 
 // this class allow to choose the method for solving the minimization problem
@@ -50,28 +35,20 @@ enum class Mode{
     Nesterov
 };
 
-// Map to convert between string representation and enum value
-const std::map<std::string, Mode> mode_map = {
-    {"gradient", Mode::gradient},
-    {"Heavy_Ball", Mode::Heavy_Ball},
-    {"Nesterov",Mode::Nesterov},
-    {"",Mode::gradient}
-};
-
 // struct aggregating all parameters
 struct input{
     
     // function and its gradient, given by the user
     functionR f;
     functionRn df;
-     //
+
+    // value of the step size to compute the derivative
     const value_type h=0.00001;
 
     // control on the residual
     value_type eps_r=1e-6;
     // control on the step length
     value_type eps_s=1e-6;
-
     // maximum number of iterations
     unsigned int it=1000;
     
@@ -80,7 +57,7 @@ struct input{
     value_type mu=0.2;
 
     // parameter needed by the Heavy-Ball method
-    value_type eta=0.9;
+    value_type eta=0.7;
 
     // initial guesses
     value_type a0=0.1;
