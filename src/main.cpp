@@ -16,9 +16,11 @@ int main(){
     input i;
     i.f=f1;
     i.df=df1;
+    std::vector<value_type> solution{-0.590551,0.295275};
+    i.sol=solution;
 
-    std::vector<value_type> solution=solve<Diff::finite_diff,Alpha::inverse_decay,Mode::gradient>(i);
+    std::vector<value_type> x=solve<Diff::finite_diff,Alpha::Armijo,Mode::gradient>(i);
     std::cout<<"Solution: ";
-    print_vector(solution);
+    print_vector(x);
     return 0;
 }

@@ -1,6 +1,6 @@
 #include <vector>
 #include <cmath>
-#include<functional> 
+#include <functional> 
 #include <iostream>
 #include <map>
 #include <iomanip>
@@ -38,6 +38,9 @@ enum class Mode{
 
 // struct aggregating all parameters
 struct input{
+
+    // exact solution
+    std::vector<value_type> sol;
     
     // function and its gradient, given by the user
     functionR f;
