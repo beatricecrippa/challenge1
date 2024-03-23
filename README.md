@@ -3,6 +3,7 @@
 ### Introduction
 Optimization algorithms play a crucial role in numerous computational tasks, ranging from machine learning model training to scientific simulations. This repository hosts an implementation of an optimization algorithm designed to efficiently discover the minimum of a specified function.
 ### Features
+The default configuration is resolving the problem with the gradient method, calculating the learning rate by the Armijo rule and compute the gradient by finite difference.
 By modifying line 23 in the main file, users can select various configurations, including the method for computing the gradient, the approach for computing the learning rate (alpha_k), and the method used to solve the minimization problem.
 
 With this flexibility, users can adapt the optimization algorithm to suit their specific computational requirements, optimizing performance while minimizing computational resources.
@@ -121,4 +122,5 @@ input read_cl(GetPot cl){
 ### Lessons Learned
 + Importance of documenting with README.md
 + Utilization of templates and if constexpr statements
-+ Utilization of GetPot library                                 
++ Utilization of GetPot library
++ Utilization of GitHub                                 
