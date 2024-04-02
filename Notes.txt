@@ -1,0 +1,10 @@
+README is very clear and contains detailed instruction and information.
+Good use of GitHub!
+
+Avoid the file helper.hpp and divide the utilities implemented inside of that by their purpose.
+You can use methods of the std::library for more efficient operations between vectors.
+Avoid allocating vectors inside loops.
+
+Good use of the template functions for the choice of the methods.
+
+Well done!
